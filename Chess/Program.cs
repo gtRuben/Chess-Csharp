@@ -2,7 +2,7 @@
 using chessboard;
 
 
-Position p = new Position(3, 2);
+Board b = new Board(8, 8);
 
-Console.WriteLine(p);
+Console.WriteLine(b);
 Console.ReadLine();
