@@ -1,2 +1,8 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿
+using chessboard;
+
+
+Position p = new Position(3, 2);
+
+Console.WriteLine(p);
+Console.ReadLine();
