@@ -7,10 +7,10 @@
         public Color? Color { get; protected set; }
         public int SumMoves { get; set; }
 
-        public Piece(Board? board, Position? position, Color? color)
+        public Piece(Board? board, Color? color)
         {
             Board = board;
-            Position = position;
+            Position = null;
             Color = color;
             SumMoves = 0;
         }
