@@ -1,8 +1,9 @@
 ﻿
+using Chess;
 using chessboard;
 
 
 Board b = new Board(8, 8);
 
-Console.WriteLine(b);
+Screen.printChessboard(b);
 Console.ReadLine();
