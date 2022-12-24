@@ -4,8 +4,11 @@ using chessboard;
 using game;
 
 
-ChessPosition cp1 = new('a', 1);
-ChessPosition cp2 = new('c', 7);
+Board b = new Board(8, 8);
 
-Console.WriteLine(cp1 + " = " + cp1.ToPosition());
-Console.WriteLine(cp2 + " = " + cp2.ToPosition());
+b.PutPiece(new Tower(b, Color.Black), new Position(0, 0));
+b.PutPiece(new Tower(b, Color.Black), new Position(0, 7));
+b.PutPiece(new Tower(b, Color.White), new Position(7, 0));
+b.PutPiece(new Tower(b, Color.White), new Position(7, 7));
+
+Screen.PrintChessboard(b);
