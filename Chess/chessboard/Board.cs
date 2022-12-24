@@ -18,10 +18,38 @@
             return _pieces[row, column];
         }
 
+        public Piece Piece(Position position)
+        {
+            return _pieces[position.Row, position.Column];
+        }
+
+        public bool TheresAPiece(Position position)
+        {
+            ValidatePosition(position);
+            return Piece(position) is not null;
+        }
+
         public void PutPiece(Piece piece, Position position)
         {
             _pieces[position.Row, position.Column] = piece;
             piece.Position = position;
+        }
+
+        public bool ValidPosition(Position position)
+        {
+            if (position.Row < 0 || position.Column < 0 || position.Row >= Rows || position.Column >= Columns)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public void ValidatePosition(Position position)
+        {
+            if (!ValidPosition(position))
+            {
+                throw new BoardException("Invalid position!");
+            }
         }
     }
 }
