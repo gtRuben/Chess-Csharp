@@ -31,6 +31,10 @@
 
         public void PutPiece(Piece piece, Position position)
         {
+            if (TheresAPiece(position))
+            {
+                throw new BoardException("There's already a piece in that position!");
+            }
             _pieces[position.Row, position.Column] = piece;
             piece.Position = position;
         }
