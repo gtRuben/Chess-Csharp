@@ -35,8 +35,20 @@
             {
                 throw new BoardException("There's already a piece in that position!");
             }
-            _pieces[position.Row, position.Column] = piece;
             piece.Position = position;
+            _pieces[position.Row, position.Column] = piece;
+        }
+
+        public Piece RemovePiece(Position position)
+        {
+            if (Piece(position) is null)
+            {
+                return null;
+            }
+            chessboard.Piece aux = Piece(position);
+            aux.Position = null;
+            _pieces[position.Row, position.Column] = null;
+            return aux;
         }
 
         public bool ValidPosition(Position position)

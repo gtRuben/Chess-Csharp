@@ -5,7 +5,7 @@
         public Board? Board { get; protected set; }
         public Position? Position { get; set; }
         public Color? Color { get; protected set; }
-        public int SumMoves { get; set; }
+        public int SumMoves { get; protected set; }
 
         public Piece(Board? board, Color? color)
         {
@@ -13,6 +13,11 @@
             Position = null;
             Color = color;
             SumMoves = 0;
+        }
+
+        public void AddMovement()
+        {
+            SumMoves++;
         }
     }
 }
