@@ -8,12 +8,14 @@ namespace game
         public Board Board { get; private set; }
         private int _turno;
         private Color? _currentPlayer;
+        public bool Finished { get; private set; }
 
         public ChessGame()
         {
             Board = new Board(8, 8);
             _turno = 1;
             _currentPlayer = Color.White;
+            Finished = false;
             PlacePieces();
         }
 
