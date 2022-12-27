@@ -25,6 +25,8 @@ namespace game
             Board.PutPiece(new Tower(Board, Color.White), new ChessPosition('h', 1).ToPosition());
             Board.PutPiece(new Tower(Board, Color.Black), new ChessPosition('a', 8).ToPosition());
             Board.PutPiece(new Tower(Board, Color.Black), new ChessPosition('h', 8).ToPosition());
+            Board.PutPiece(new King(Board, Color.White), new ChessPosition('d', 4).ToPosition());
+            Board.PutPiece(new King(Board, Color.Black), new ChessPosition('e', 4).ToPosition());
         }
 
         public void MovePiece(Position origin, Position destination)

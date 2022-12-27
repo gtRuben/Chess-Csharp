@@ -10,11 +10,9 @@ try
 
     while (!match.Finished)
     {
-        Console.Clear();
         Screen.PrintChessboard(match.Board);
-
-        Console.WriteLine();
         Position origin = Screen.ReadPosition("Origem: ");
+        Screen.PrintChessboard(match.Board, match.Board.Piece(origin).PossibleMoves());
         Position destin = Screen.ReadPosition("Destino: ");
 
         match.MovePiece(origin, destin);

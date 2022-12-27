@@ -7,36 +7,46 @@ namespace Chess
     {
         public static void PrintPiece(Piece piece)
         {
-            if (piece.Color == Color.White)
+            if (piece is null)
             {
-                Console.Write(piece);
+                Console.Write("- ");
             }
             else
             {
-                ConsoleColor aux = Console.ForegroundColor;
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.Write(piece);
-                Console.ForegroundColor = aux;
+                if (piece.Color == Color.White)
+                {
+                    Console.Write(piece);
+                }
+                else
+                {
+                    ConsoleColor aux = Console.ForegroundColor;
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.Write(piece);
+                    Console.ForegroundColor = aux;
+                }
+                Console.Write(" ");
             }
         }
 
-        public static void PrintChessboard(Board board)
+        public static void PrintChessboard(Board board, bool[,]? possibleMoves = null)
         {
+            Console.Clear();
             Console.WriteLine();
+            ConsoleColor defaultBackColor = Console.BackgroundColor;
             for (int i = 0; i < board.Rows; i++)
             {
                 Console.Write("\t" + (8 - i) + "  ");
                 for (int j = 0; j < board.Columns; j++)
                 {
-                    if (board.Piece(i, j) is null)
+                    if (possibleMoves != null)
                     {
-                        Console.Write("- ");
+                        if (possibleMoves[i, j])
+                        {
+                            Console.BackgroundColor = ConsoleColor.DarkGray;
+                        }
                     }
-                    else
-                    {
-                        PrintPiece(board.Piece(i, j));
-                        Console.Write(" ");
-                    }
+                    PrintPiece(board.Piece(i, j));
+                    Console.BackgroundColor = defaultBackColor;
                 }
                 Console.WriteLine();
             }
@@ -45,6 +55,7 @@ namespace Chess
 
         public static Position ReadPosition(string message)
         {
+            Console.WriteLine();
             Console.Write(" " + message);
             string position = Console.ReadLine();
             char column = position[0];

@@ -8,12 +8,6 @@ namespace game
         {
         }
 
-        private bool CanMove(Position position)
-        {
-            Piece piece = Board.Piece(position);
-            return piece is null || piece.Color != Color;
-        }
-
         public override bool[,] PossibleMoves()
         {
             bool[,] possibleMoves = new bool[Board.Rows, Board.Columns];
