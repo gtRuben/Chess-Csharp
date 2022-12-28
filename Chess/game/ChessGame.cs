@@ -31,19 +31,19 @@ namespace game
             Board.PutPiece(new King(Board, Color.White), new ChessPosition('e', 4).ToPosition());
         }
 
-        public void ToPlay(Position origin, Position destination)
+        public void ToPlay(Position origin, Position target)
         {
-            MovePiece(origin, destination);
+            MovePiece(origin, target);
             Round++;
             ChangePlayer();
         }
 
-        private void MovePiece(Position origin, Position destination)
+        private void MovePiece(Position origin, Position target)
         {
             Piece piece = Board.RemovePiece(origin);
             piece.AddMovement();
-            Piece capturedPiece = Board.RemovePiece(destination);
-            Board.PutPiece(piece, destination);
+            Piece capturedPiece = Board.RemovePiece(target);
+            Board.PutPiece(piece, target);
         }
 
         private void ChangePlayer()
@@ -71,6 +71,14 @@ namespace game
             if (!Board.Piece(position).FreeToMove())
             {
                 throw new BoardException(" This piece cannot move.");
+            }
+        }
+
+        public void ValidateTargetPosition(Position origin, Position target)
+        {
+            if (!Board.Piece(origin).CanMoveTo(target))
+            {
+                throw new BoardException(" Invalid move.");
             }
         }
     }

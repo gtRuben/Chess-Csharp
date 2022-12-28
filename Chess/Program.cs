@@ -19,9 +19,10 @@ try
 
             Screen.PrintChessboard(match.Board, match.Board.Piece(origin).PossibleMoves());
             Screen.ShowPlayInfo(match, "Destination: ");
-            Position destin = Screen.ReadPosition();
+            Position target = Screen.ReadPosition();
+            match.ValidateTargetPosition(origin, target);
 
-            match.ToPlay(origin, destin);
+            match.ToPlay(origin, target);
         }
         catch (BoardException exception)
         {
