@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace chessboard
+﻿namespace chessboard
 {
     internal class BoardException : Exception
     {

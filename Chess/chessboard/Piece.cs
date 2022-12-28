@@ -15,6 +15,15 @@
             SumMoves = 0;
         }
 
+        public bool FreeToMove()
+        {
+            foreach (bool x in PossibleMoves())
+            {
+                if (x) return true;
+            }
+            return false;
+        }
+
         public abstract bool[,] PossibleMoves();
 
         public void AddMovement()

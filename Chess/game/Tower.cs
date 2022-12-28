@@ -1,5 +1,4 @@
 ﻿using chessboard;
-using System.Runtime.Intrinsics.X86;
 
 namespace game
 {

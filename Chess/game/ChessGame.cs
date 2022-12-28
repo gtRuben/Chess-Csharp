@@ -1,5 +1,4 @@
-﻿using System;
-using chessboard;
+﻿using chessboard;
 
 namespace game
 {
@@ -22,11 +21,14 @@ namespace game
         private void PlacePieces()
         {
             Board.PutPiece(new Tower(Board, Color.White), new ChessPosition('a', 1).ToPosition());
+            Board.PutPiece(new Tower(Board, Color.White), new ChessPosition('b', 1).ToPosition());
+            Board.PutPiece(new Tower(Board, Color.White), new ChessPosition('b', 2).ToPosition());
+            Board.PutPiece(new Tower(Board, Color.White), new ChessPosition('a', 2).ToPosition());
             Board.PutPiece(new Tower(Board, Color.White), new ChessPosition('h', 1).ToPosition());
             Board.PutPiece(new Tower(Board, Color.Black), new ChessPosition('a', 8).ToPosition());
             Board.PutPiece(new Tower(Board, Color.Black), new ChessPosition('h', 8).ToPosition());
             Board.PutPiece(new King(Board, Color.White), new ChessPosition('d', 4).ToPosition());
-            Board.PutPiece(new King(Board, Color.Black), new ChessPosition('e', 4).ToPosition());
+            Board.PutPiece(new King(Board, Color.White), new ChessPosition('e', 4).ToPosition());
         }
 
         public void ToPlay(Position origin, Position destination)
@@ -53,6 +55,22 @@ namespace game
             else
             {
                 CurrentPlayer = Color.White;
+            }
+        }
+
+        public void ValidateOriginPosition(Position position)
+        {
+            if (Board.Piece(position) is null)
+            {
+                throw new BoardException(" There's no piece there.");
+            }
+            if (!Board.Piece(position).Color.Equals(CurrentPlayer))
+            {
+                throw new BoardException($" The piece chosen isn't {CurrentPlayer}.");
+            }
+            if (!Board.Piece(position).FreeToMove())
+            {
+                throw new BoardException(" This piece cannot move.");
             }
         }
     }
