@@ -1,5 +1,4 @@
-﻿
-using Chess;
+﻿using Chess;
 using chessboard;
 using game;
 
@@ -12,14 +11,12 @@ try
     {
         try
         {
-            Screen.PrintChessboard(match.Board);
-            Screen.ShowPlayInfo(match, "Origin: ");
-            Position origin = Screen.ReadPosition();
+            Screen.PrintMatch(match, "Origin: ");
+            Position origin = ChessPosition.ReadPosition();
             match.ValidateOriginPosition(origin);
 
-            Screen.PrintChessboard(match.Board, match.Board.Piece(origin).PossibleMoves());
-            Screen.ShowPlayInfo(match, "Destination: ");
-            Position target = Screen.ReadPosition();
+            Screen.PrintMatch(match, origin, "Destination: ");
+            Position target = ChessPosition.ReadPosition();
             match.ValidateTargetPosition(origin, target);
 
             match.ToPlay(origin, target);

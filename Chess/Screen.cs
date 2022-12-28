@@ -5,7 +5,19 @@ namespace Chess
 {
     internal class Screen
     {
-        public static void PrintChessboard(Board board, bool[,]? possibleMoves = null)
+        public static void PrintMatch(ChessGame match, string message)
+        {
+            PrintChessboard(match.Board);
+            ShowPlayInfo(match, message);
+        }
+
+        public static void PrintMatch(ChessGame match, Position position, string message)
+        {
+            PrintChessboard(match.Board, position);
+            ShowPlayInfo(match, message);
+        }
+
+        public static void PrintChessboard(Board board, Position? position = null)
         {
             Console.Clear();
             Console.WriteLine();
@@ -15,9 +27,9 @@ namespace Chess
                 Console.Write("\t" + (8 - i) + "  ");
                 for (int j = 0; j < board.Columns; j++)
                 {
-                    if (possibleMoves != null)
+                    if (position != null)
                     {
-                        if (possibleMoves[i, j])
+                        if (board.Piece(position).PossibleMoves()[i, j])
                         {
                             Console.BackgroundColor = ConsoleColor.DarkGray;
                         }
@@ -55,17 +67,45 @@ namespace Chess
 
         public static void ShowPlayInfo(ChessGame match, string message)
         {
+            if (match.CapturedPieces(Color.White).Count > 0)
+            {
+                Console.WriteLine();
+                Console.Write(" White losses:");
+                PrintCapturedPieces(match.CapturedPieces(Color.White));
+            }
+            if (match.CapturedPieces(Color.Black).Count > 0)
+            {
+                Console.WriteLine();
+                Console.Write(" Black losses:");
+                PrintCapturedPieces(match.CapturedPieces(Color.Black), true);
+            }
+            Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine($" Round {match.Round}: {match.CurrentPlayer}'s turn.");
             Console.Write(" " + message);
         }
 
-        public static Position ReadPosition()
+        public static void PrintCapturedPieces(IEnumerable<Piece> capturedPieces, bool isBlack = false)
         {
-            string position = Console.ReadLine();
-            char column = position[0];
-            int row = int.Parse($"{position[1]}");
-            return new ChessPosition(column, row).ToPosition();
+            Console.Write(" [");
+            ConsoleColor aux = Console.ForegroundColor;
+            if (!isBlack)
+            {
+                foreach (Piece piece in capturedPieces)
+                {
+                    Console.Write($" {piece}");
+                }
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                foreach (Piece piece in capturedPieces)
+                {
+                    Console.Write($" {piece}");
+                }
+            }
+            Console.ForegroundColor = aux;
+            Console.Write(" ]");
         }
     }
 }

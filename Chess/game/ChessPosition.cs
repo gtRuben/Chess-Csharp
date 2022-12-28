@@ -13,6 +13,14 @@ namespace game
             Row = row;
         }
 
+        public static Position ReadPosition()
+        {
+            string position = Console.ReadLine();
+            char column = position[0];
+            int row = int.Parse($"{position[1]}");
+            return new ChessPosition(column, row).ToPosition();
+        }
+
         public Position ToPosition()
         {
             return new Position(8 - Row, Column - 'a');

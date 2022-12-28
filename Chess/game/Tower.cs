@@ -18,9 +18,7 @@ namespace game
             while (Board.ValidPosition(aux) && CanMove(aux))
             {
                 possibleMoves[aux.Row, aux.Column] = true;
-
-                //if (!Board.ValidPosition(aux) || !CanMove(aux)) break;
-
+                if (Board.Piece(aux) != null) break;
                 aux.Row--;
             }
 
@@ -30,9 +28,7 @@ namespace game
             while (Board.ValidPosition(aux) && CanMove(aux))
             {
                 possibleMoves[aux.Row, aux.Column] = true;
-
-                //if (!Board.ValidPosition(aux) || !CanMove(aux)) break;
-
+                if (Board.Piece(aux) != null) break;
                 aux.Column++;
             }
 
@@ -41,9 +37,7 @@ namespace game
             while (Board.ValidPosition(aux) && CanMove(aux))
             {
                 possibleMoves[aux.Row, aux.Column] = true;
-
-                //if (!Board.ValidPosition(aux) || !CanMove(aux)) break;
-
+                if (Board.Piece(aux) != null) break;
                 aux.Row++;
             }
 
@@ -52,9 +46,7 @@ namespace game
             while (Board.ValidPosition(aux) && CanMove(aux))
             {
                 possibleMoves[aux.Row, aux.Column] = true;
-
-                //if (!Board.ValidPosition(aux) || !CanMove(aux)) break;
-
+                if (Board.Piece(aux) != null) break;
                 aux.Column--;
             }
 

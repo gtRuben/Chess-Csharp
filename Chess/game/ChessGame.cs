@@ -4,12 +4,12 @@ namespace game
 {
     internal class ChessGame
     {
+        private HashSet<Piece> _pieces;
+        private HashSet<Piece> _capturedPieces;
         public Board Board { get; private set; }
         public int Round { get; private set; }
         public Color? CurrentPlayer { get; private set; }
         public bool Finished { get; private set; }
-        private HashSet<Piece> _pieces;
-        private HashSet<Piece> _capturedPieces;
 
         public ChessGame()
         {
