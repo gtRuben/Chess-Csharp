@@ -8,6 +8,8 @@ namespace game
         public int Round { get; private set; }
         public Color? CurrentPlayer { get; private set; }
         public bool Finished { get; private set; }
+        private HashSet<Piece> _pieces;
+        private HashSet<Piece> _capturedPieces;
 
         public ChessGame()
         {
@@ -15,20 +17,34 @@ namespace game
             Round = 1;
             CurrentPlayer = Color.White;
             Finished = false;
+            _pieces = new();
+            _capturedPieces = new();
             PlacePieces();
         }
 
         private void PlacePieces()
         {
-            Board.PutPiece(new Tower(Board, Color.White), new ChessPosition('a', 1).ToPosition());
-            Board.PutPiece(new Tower(Board, Color.White), new ChessPosition('b', 1).ToPosition());
-            Board.PutPiece(new Tower(Board, Color.White), new ChessPosition('b', 2).ToPosition());
-            Board.PutPiece(new Tower(Board, Color.White), new ChessPosition('a', 2).ToPosition());
-            Board.PutPiece(new Tower(Board, Color.White), new ChessPosition('h', 1).ToPosition());
-            Board.PutPiece(new Tower(Board, Color.Black), new ChessPosition('a', 8).ToPosition());
-            Board.PutPiece(new Tower(Board, Color.Black), new ChessPosition('h', 8).ToPosition());
-            Board.PutPiece(new King(Board, Color.White), new ChessPosition('d', 4).ToPosition());
-            Board.PutPiece(new King(Board, Color.White), new ChessPosition('e', 4).ToPosition());
+            // White
+            NewPiece(new Tower(Board, Color.White), new ChessPosition('c', 1));
+            NewPiece(new Tower(Board, Color.White), new ChessPosition('c', 2));
+            NewPiece(new Tower(Board, Color.White), new ChessPosition('d', 2));
+            NewPiece(new Tower(Board, Color.White), new ChessPosition('e', 1));
+            NewPiece(new Tower(Board, Color.White), new ChessPosition('e', 2));
+            NewPiece(new King(Board, Color.White), new ChessPosition('d', 1));
+
+            // Black
+            NewPiece(new Tower(Board, Color.Black), new ChessPosition('c', 7));
+            NewPiece(new Tower(Board, Color.Black), new ChessPosition('c', 8));
+            NewPiece(new Tower(Board, Color.Black), new ChessPosition('d', 7));
+            NewPiece(new Tower(Board, Color.Black), new ChessPosition('e', 8));
+            NewPiece(new Tower(Board, Color.Black), new ChessPosition('e', 7));
+            NewPiece(new King(Board, Color.Black), new ChessPosition('d', 8));
+        }
+
+        public void NewPiece(Piece piece, ChessPosition chessPosition)
+        {
+            Board.PutPiece(piece, chessPosition.ToPosition());
+            _pieces.Add(piece);
         }
 
         public void ToPlay(Position origin, Position target)
@@ -44,6 +60,10 @@ namespace game
             piece.AddMovement();
             Piece capturedPiece = Board.RemovePiece(target);
             Board.PutPiece(piece, target);
+            if (capturedPiece != null)
+            {
+                _capturedPieces.Add(capturedPiece);
+            }
         }
 
         private void ChangePlayer()
@@ -58,6 +78,18 @@ namespace game
             }
         }
 
+        public HashSet<Piece> PiecesOnTheBoard(Color color)
+        {
+            var pieces = new HashSet<Piece>(_pieces.Where(p => p.Color == color));
+            pieces.ExceptWith(CapturedPieces(color));
+            return pieces;
+        }
+
+        public HashSet<Piece> CapturedPieces(Color color)
+        {
+            return new HashSet<Piece>(_capturedPieces.Where(p => p.Color == color));
+        }
+
         public void ValidateOriginPosition(Position position)
         {
             if (Board.Piece(position) is null)
@@ -66,7 +98,7 @@ namespace game
             }
             if (!Board.Piece(position).Color.Equals(CurrentPlayer))
             {
-                throw new BoardException($" The piece chosen isn't {CurrentPlayer}.");
+                throw new BoardException($" You need to choose a {CurrentPlayer} piece.");
             }
             if (!Board.Piece(position).FreeToMove())
             {
