@@ -11,11 +11,14 @@ try
     while (!match.Finished)
     {
         Screen.PrintChessboard(match.Board);
-        Position origin = Screen.ReadPosition("Origem: ");
-        Screen.PrintChessboard(match.Board, match.Board.Piece(origin).PossibleMoves());
-        Position destin = Screen.ReadPosition("Destino: ");
+        Screen.ShowPlayInfo(match, "Origin: ");
+        Position origin = Screen.ReadPosition();
 
-        match.MovePiece(origin, destin);
+        Screen.PrintChessboard(match.Board, match.Board.Piece(origin).PossibleMoves());
+        Screen.ShowPlayInfo(match, "Destination: ");
+        Position destin = Screen.ReadPosition();
+
+        match.ToPlay(origin, destin);
     }
 }
 catch (BoardException exception)

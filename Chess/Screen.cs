@@ -5,29 +5,6 @@ namespace Chess
 {
     internal class Screen
     {
-        public static void PrintPiece(Piece piece)
-        {
-            if (piece is null)
-            {
-                Console.Write("- ");
-            }
-            else
-            {
-                if (piece.Color == Color.White)
-                {
-                    Console.Write(piece);
-                }
-                else
-                {
-                    ConsoleColor aux = Console.ForegroundColor;
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.Write(piece);
-                    Console.ForegroundColor = aux;
-                }
-                Console.Write(" ");
-            }
-        }
-
         public static void PrintChessboard(Board board, bool[,]? possibleMoves = null)
         {
             Console.Clear();
@@ -53,10 +30,38 @@ namespace Chess
             Console.WriteLine("\t   a b c d e f g h");
         }
 
-        public static Position ReadPosition(string message)
+        public static void PrintPiece(Piece piece)
+        {
+            if (piece is null)
+            {
+                Console.Write("- ");
+            }
+            else
+            {
+                if (piece.Color == Color.White)
+                {
+                    Console.Write(piece);
+                }
+                else
+                {
+                    ConsoleColor aux = Console.ForegroundColor;
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.Write(piece);
+                    Console.ForegroundColor = aux;
+                }
+                Console.Write(" ");
+            }
+        }
+
+        public static void ShowPlayInfo(ChessGame match, string message)
         {
             Console.WriteLine();
+            Console.WriteLine($" Round {match.Round}: {match.CurrentPlayer}'s turn.");
             Console.Write(" " + message);
+        }
+
+        public static Position ReadPosition()
+        {
             string position = Console.ReadLine();
             char column = position[0];
             int row = int.Parse($"{position[1]}");

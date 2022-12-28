@@ -23,12 +23,6 @@
             return _pieces[position.Row, position.Column];
         }
 
-        public bool TheresAPiece(Position position)
-        {
-            ValidatePosition(position);
-            return Piece(position) is not null;
-        }
-
         public void PutPiece(Piece piece, Position position)
         {
             if (TheresAPiece(position))
@@ -39,16 +33,18 @@
             _pieces[position.Row, position.Column] = piece;
         }
 
-        public Piece RemovePiece(Position position)
+        public bool TheresAPiece(Position position)
         {
-            if (Piece(position) is null)
+            ValidatePosition(position);
+            return Piece(position) is not null;
+        }
+
+        public void ValidatePosition(Position position)
+        {
+            if (!ValidPosition(position))
             {
-                return null;
+                throw new BoardException("Invalid position!");
             }
-            chessboard.Piece aux = Piece(position);
-            aux.Position = null;
-            _pieces[position.Row, position.Column] = null;
-            return aux;
         }
 
         public bool ValidPosition(Position position)
@@ -60,12 +56,16 @@
             return true;
         }
 
-        public void ValidatePosition(Position position)
+        public Piece? RemovePiece(Position position)
         {
-            if (!ValidPosition(position))
+            if (Piece(position) is null)
             {
-                throw new BoardException("Invalid position!");
+                return null;
             }
+            chessboard.Piece aux = Piece(position);
+            aux.Position = null;
+            _pieces[position.Row, position.Column] = null;
+            return aux;
         }
     }
 }

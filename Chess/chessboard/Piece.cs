@@ -17,15 +17,15 @@
 
         public abstract bool[,] PossibleMoves();
 
+        public void AddMovement()
+        {
+            SumMoves++;
+        }
+
         private protected bool CanMove(Position position)
         {
             Piece piece = Board.Piece(position);
             return piece is null || piece.Color != Color;
-        }
-
-        public void AddMovement()
-        {
-            SumMoves++;
         }
     }
 }
