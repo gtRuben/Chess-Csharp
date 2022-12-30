@@ -54,7 +54,7 @@ namespace game
         public void ToPlay(Position origin, Position target)
         {
             TryMove(origin, target);
-            InCheck = Check();
+            InCheck = Check(Opponent(CurrentPlayer));
             Round++;
             ChangePlayer();
         }
@@ -62,29 +62,11 @@ namespace game
 
         public void TryMove(Position origin, Position target)
         {
-            if (InCheck)
+            Piece piece = MovePiece(origin, target);
+            if (Check(CurrentPlayer))
             {
-                while (InCheck)
-                {
-                    Piece piece = MovePiece(origin, target);
-                    InCheck = ImInCheck();
-                    if (InCheck)
-                    {
-                        UndoMove(target, origin, piece);
-                        throw new BoardException(" You cannot leave your king in check!");
-                    }
-                }
-            }
-            else
-            {
-                Piece piece = MovePiece(origin, target);
-                InCheck = ImInCheck();
-                if (InCheck)
-                {
-                    UndoMove(target, origin, piece);
-                    InCheck = Check();
-                    throw new BoardException(" You cannot leave your king in check!");
-                }
+                UndoMove(target, origin, piece);
+                throw new BoardException(" You cannot leave your king in check!");
             }
         }
 
@@ -103,11 +85,11 @@ namespace game
         }
 
 
-        public bool ImInCheck()
+        public bool Check(Color color)
         {
-            var opposingPieces = PiecesOnTheBoard(Opponent());
-            Position king = Board.GetKingsPosition(CurrentPlayer);
-            foreach (Piece piece in opposingPieces)
+            var pieces = PiecesOnTheBoard(Opponent(color));
+            Position king = Board.GetKingsPosition(color);
+            foreach (Piece piece in pieces)
             {
                 if (piece.PossibleMoves()[king.Row, king.Column])
                 {
@@ -118,9 +100,9 @@ namespace game
         }
 
 
-        public Color Opponent()
+        public Color Opponent(Color color)
         {
-            if (CurrentPlayer == Color.White)
+            if (color == Color.White)
             {
                 return Color.Black;
             }
@@ -149,21 +131,6 @@ namespace game
                 Board.PutPiece(capturedPiece, target);
                 _capturedPieces.Remove(capturedPiece);
             }
-        }
-
-
-        public bool Check()
-        {
-            var myPieces = PiecesOnTheBoard(CurrentPlayer);
-            Position king = Board.GetKingsPosition(Opponent());
-            foreach (Piece piece in myPieces)
-            {
-                if (piece.PossibleMoves()[king.Row, king.Column])
-                {
-                    return true;
-                }
-            }
-            return false;
         }
 
 
