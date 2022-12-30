@@ -27,19 +27,19 @@ namespace game
         private void PlacePieces()
         {
             // White
-            NewPiece(new Tower(Board, Color.White), new ChessPosition('c', 1)); /*
+            NewPiece(new Tower(Board, Color.White), new ChessPosition('c', 1));
             NewPiece(new Tower(Board, Color.White), new ChessPosition('c', 2));
             NewPiece(new Tower(Board, Color.White), new ChessPosition('d', 2));
             NewPiece(new Tower(Board, Color.White), new ChessPosition('e', 1));
-            NewPiece(new Tower(Board, Color.White), new ChessPosition('e', 2)); */
+            NewPiece(new Tower(Board, Color.White), new ChessPosition('e', 2));
             NewPiece(new King(Board, Color.White), new ChessPosition('d', 1));
 
             // Black
-            NewPiece(new Tower(Board, Color.Black), new ChessPosition('c', 7)); /*
+            NewPiece(new Tower(Board, Color.Black), new ChessPosition('c', 7));
             NewPiece(new Tower(Board, Color.Black), new ChessPosition('c', 8));
             NewPiece(new Tower(Board, Color.Black), new ChessPosition('d', 7));
             NewPiece(new Tower(Board, Color.Black), new ChessPosition('e', 8));
-            NewPiece(new Tower(Board, Color.Black), new ChessPosition('e', 7)); */
+            NewPiece(new Tower(Board, Color.Black), new ChessPosition('e', 7));
             NewPiece(new King(Board, Color.Black), new ChessPosition('d', 8));
         }
 
@@ -53,22 +53,101 @@ namespace game
 
         public void ToPlay(Position origin, Position target)
         {
-            MovePiece(origin, target);
+            TryMove(origin, target);
             InCheck = Check();
             Round++;
             ChangePlayer();
         }
 
 
-        private void MovePiece(Position origin, Position target)
+        public void TryMove(Position origin, Position target)
+        {
+            if (InCheck)
+            {
+                while (InCheck)
+                {
+                    Piece piece = MovePiece(origin, target);
+                    InCheck = ImInCheck();
+                    if (InCheck)
+                    {
+                        UndoMove(target, origin, piece);
+                        throw new BoardException(" You cannot leave your king in check!");
+                    }
+                }
+            }
+            else
+            {
+                Piece piece = MovePiece(origin, target);
+                InCheck = ImInCheck();
+                if (InCheck)
+                {
+                    UndoMove(target, origin, piece);
+                    InCheck = Check();
+                    throw new BoardException(" You cannot leave your king in check!");
+                }
+            }
+        }
+
+
+        private Piece MovePiece(Position origin, Position target)
         {
             Piece piece = Board.RemovePiece(origin);
-            piece.AddMovement();
+            piece.IMoved();
             Piece capturedPiece = Board.RemovePiece(target);
             Board.PutPiece(piece, target);
             if (capturedPiece != null)
             {
                 _capturedPieces.Add(capturedPiece);
+            }
+            return capturedPiece;
+        }
+
+
+        public bool ImInCheck()
+        {
+            var opposingPieces = PiecesOnTheBoard(Opponent());
+            Position king = Board.GetKingsPosition(CurrentPlayer);
+            foreach (Piece piece in opposingPieces)
+            {
+                if (piece.PossibleMoves()[king.Row, king.Column])
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+
+        public Color Opponent()
+        {
+            if (CurrentPlayer == Color.White)
+            {
+                return Color.Black;
+            }
+            else
+            {
+                return Color.White;
+            }
+        }
+
+
+        public HashSet<Piece> PiecesOnTheBoard(Color color)
+        {
+            var pieces = new HashSet<Piece>(_pieces.Where(p => p.Color == color));
+            pieces.ExceptWith(CapturedPieces(color));
+            return pieces;
+        }
+
+
+        private void UndoMove(Position target, Position origin, Piece? capturedPiece)
+        {
+            Piece piece = Board.RemovePiece(target);
+            piece.IMoved(false);
+            Board.PutPiece(piece, origin);
+            if (capturedPiece != null)
+            {
+                Board.PutPiece(capturedPiece, target);
+                _capturedPieces.Remove(capturedPiece);
             }
         }
 
@@ -85,27 +164,6 @@ namespace game
                 }
             }
             return false;
-        }
-
-
-        public HashSet<Piece> PiecesOnTheBoard(Color color)
-        {
-            var pieces = new HashSet<Piece>(_pieces.Where(p => p.Color == color));
-            pieces.ExceptWith(CapturedPieces(color));
-            return pieces;
-        }
-
-
-        public Color Opponent()
-        {
-            if (CurrentPlayer == Color.White)
-            {
-                return Color.Black;
-            }
-            else
-            {
-                return Color.White;
-            }
         }
 
 

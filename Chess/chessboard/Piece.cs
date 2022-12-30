@@ -20,12 +20,6 @@
         public abstract bool[,] PossibleMoves();
 
 
-        public void AddMovement()
-        {
-            SumMoves++;
-        }
-
-
         public bool CanMoveTo(Position target)
         {
             return PossibleMoves()[target.Row, target.Column];
@@ -46,6 +40,19 @@
         {
             Piece piece = Board.Piece(position);
             return piece is null || piece.Color != Color;
+        }
+
+
+        public void IMoved(bool iMoved = true)
+        {
+            if (iMoved)
+            {
+                SumMoves++;
+            }
+            else
+            {
+                SumMoves--;
+            }
         }
     }
 }
