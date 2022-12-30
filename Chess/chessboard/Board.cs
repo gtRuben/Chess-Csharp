@@ -1,10 +1,13 @@
-﻿namespace chessboard
+﻿using game;
+
+namespace chessboard
 {
     internal class Board
     {
         public int Rows { get; set; }
         public int Columns { get; set; }
         private Piece[,] _pieces;
+
 
         public Board(int rows, int columns)
         {
@@ -13,15 +16,31 @@
             _pieces = new Piece[Rows, Columns];
         }
 
+
         public Piece Piece(int row, int column)
         {
             return _pieces[row, column];
         }
 
+
         public Piece Piece(Position position)
         {
             return _pieces[position.Row, position.Column];
         }
+
+
+        public Position GetKingsPosition(Color color)
+        {
+            foreach (Piece piece in _pieces)
+            {
+                if (piece is King && piece.Color == color)
+                {
+                    return piece.Position;
+                }
+            }
+            throw new BoardException(" An unexpected error occurred.");
+        }
+
 
         public void PutPiece(Piece piece, Position position)
         {
@@ -33,11 +52,13 @@
             _pieces[position.Row, position.Column] = piece;
         }
 
+
         public bool TheresAPiece(Position position)
         {
             ValidatePosition(position);
             return Piece(position) is not null;
         }
+
 
         public void ValidatePosition(Position position)
         {
@@ -47,6 +68,7 @@
             }
         }
 
+
         public bool ValidPosition(Position position)
         {
             if (position.Row < 0 || position.Column < 0 || position.Row >= Rows || position.Column >= Columns)
@@ -55,6 +77,7 @@
             }
             return true;
         }
+
 
         public Piece? RemovePiece(Position position)
         {

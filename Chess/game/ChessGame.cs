@@ -8,38 +8,41 @@ namespace game
         private HashSet<Piece> _capturedPieces;
         public Board Board { get; private set; }
         public int Round { get; private set; }
-        public Color? CurrentPlayer { get; private set; }
+        public Color CurrentPlayer { get; private set; }
         public bool Finished { get; private set; }
+        public bool InCheck { get; private set; }
+
 
         public ChessGame()
         {
             Board = new Board(8, 8);
             Round = 1;
             CurrentPlayer = Color.White;
-            Finished = false;
             _pieces = new();
             _capturedPieces = new();
             PlacePieces();
         }
 
+
         private void PlacePieces()
         {
             // White
-            NewPiece(new Tower(Board, Color.White), new ChessPosition('c', 1));
+            NewPiece(new Tower(Board, Color.White), new ChessPosition('c', 1)); /*
             NewPiece(new Tower(Board, Color.White), new ChessPosition('c', 2));
             NewPiece(new Tower(Board, Color.White), new ChessPosition('d', 2));
             NewPiece(new Tower(Board, Color.White), new ChessPosition('e', 1));
-            NewPiece(new Tower(Board, Color.White), new ChessPosition('e', 2));
+            NewPiece(new Tower(Board, Color.White), new ChessPosition('e', 2)); */
             NewPiece(new King(Board, Color.White), new ChessPosition('d', 1));
 
             // Black
-            NewPiece(new Tower(Board, Color.Black), new ChessPosition('c', 7));
+            NewPiece(new Tower(Board, Color.Black), new ChessPosition('c', 7)); /*
             NewPiece(new Tower(Board, Color.Black), new ChessPosition('c', 8));
             NewPiece(new Tower(Board, Color.Black), new ChessPosition('d', 7));
             NewPiece(new Tower(Board, Color.Black), new ChessPosition('e', 8));
-            NewPiece(new Tower(Board, Color.Black), new ChessPosition('e', 7));
+            NewPiece(new Tower(Board, Color.Black), new ChessPosition('e', 7)); */
             NewPiece(new King(Board, Color.Black), new ChessPosition('d', 8));
         }
+
 
         public void NewPiece(Piece piece, ChessPosition chessPosition)
         {
@@ -47,12 +50,15 @@ namespace game
             _pieces.Add(piece);
         }
 
+
         public void ToPlay(Position origin, Position target)
         {
             MovePiece(origin, target);
+            InCheck = Check();
             Round++;
             ChangePlayer();
         }
+
 
         private void MovePiece(Position origin, Position target)
         {
@@ -66,6 +72,43 @@ namespace game
             }
         }
 
+
+        public bool Check()
+        {
+            var myPieces = PiecesOnTheBoard(CurrentPlayer);
+            Position king = Board.GetKingsPosition(Opponent());
+            foreach (Piece piece in myPieces)
+            {
+                if (piece.PossibleMoves()[king.Row, king.Column])
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+
+        public HashSet<Piece> PiecesOnTheBoard(Color color)
+        {
+            var pieces = new HashSet<Piece>(_pieces.Where(p => p.Color == color));
+            pieces.ExceptWith(CapturedPieces(color));
+            return pieces;
+        }
+
+
+        public Color Opponent()
+        {
+            if (CurrentPlayer == Color.White)
+            {
+                return Color.Black;
+            }
+            else
+            {
+                return Color.White;
+            }
+        }
+
+
         private void ChangePlayer()
         {
             if (CurrentPlayer == Color.White)
@@ -78,17 +121,12 @@ namespace game
             }
         }
 
-        public HashSet<Piece> PiecesOnTheBoard(Color color)
-        {
-            var pieces = new HashSet<Piece>(_pieces.Where(p => p.Color == color));
-            pieces.ExceptWith(CapturedPieces(color));
-            return pieces;
-        }
 
         public HashSet<Piece> CapturedPieces(Color color)
         {
             return new HashSet<Piece>(_capturedPieces.Where(p => p.Color == color));
         }
+
 
         public void ValidateOriginPosition(Position position)
         {
@@ -105,6 +143,7 @@ namespace game
                 throw new BoardException(" This piece cannot move.");
             }
         }
+
 
         public void ValidateTargetPosition(Position origin, Position target)
         {

@@ -7,6 +7,7 @@
         public Color? Color { get; protected set; }
         public int SumMoves { get; protected set; }
 
+
         public Piece(Board board, Color? color)
         {
             Board = board;
@@ -14,6 +15,22 @@
             Color = color;
             SumMoves = 0;
         }
+
+
+        public abstract bool[,] PossibleMoves();
+
+
+        public void AddMovement()
+        {
+            SumMoves++;
+        }
+
+
+        public bool CanMoveTo(Position target)
+        {
+            return PossibleMoves()[target.Row, target.Column];
+        }
+
 
         public bool FreeToMove()
         {
@@ -24,19 +41,8 @@
             return false;
         }
 
-        public bool CanMoveTo(Position position)
-        {
-            return PossibleMoves()[position.Row, position.Column];
-        }
 
-        public abstract bool[,] PossibleMoves();
-
-        public void AddMovement()
-        {
-            SumMoves++;
-        }
-
-        private protected bool CanMove(Position position)
+        private protected bool FreeWay(Position position)
         {
             Piece piece = Board.Piece(position);
             return piece is null || piece.Color != Color;

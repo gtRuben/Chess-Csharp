@@ -11,11 +11,13 @@ namespace Chess
             ShowPlayInfo(match, message);
         }
 
+
         public static void PrintMatch(ChessGame match, Position position, string message)
         {
             PrintChessboard(match.Board, position);
             ShowPlayInfo(match, message);
         }
+
 
         public static void PrintChessboard(Board board, Position? position = null)
         {
@@ -42,6 +44,7 @@ namespace Chess
             Console.WriteLine("\t   a b c d e f g h");
         }
 
+
         public static void PrintPiece(Piece piece)
         {
             if (piece is null)
@@ -65,6 +68,7 @@ namespace Chess
             }
         }
 
+
         public static void ShowPlayInfo(ChessGame match, string message)
         {
             if (match.CapturedPieces(Color.White).Count > 0)
@@ -82,8 +86,13 @@ namespace Chess
             Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine($" Round {match.Round}: {match.CurrentPlayer}'s turn.");
+            if (match.InCheck)
+            {
+                Console.WriteLine(" You're in check!");
+            }
             Console.Write(" " + message);
         }
+
 
         public static void PrintCapturedPieces(IEnumerable<Piece> capturedPieces, bool isBlack = false)
         {
