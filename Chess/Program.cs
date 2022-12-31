@@ -2,7 +2,6 @@
 using chessboard;
 using game;
 
-
 try
 {
     ChessGame match = new ChessGame();
@@ -27,6 +26,8 @@ try
             Console.ReadLine();
         }
     }
+
+    Screen.PrintMatch(match, "Game Over");
 }
 catch (BoardException exception)
 {

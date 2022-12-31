@@ -19,7 +19,7 @@ namespace Chess
         }
 
 
-        public static void PrintChessboard(Board board, Position? position = null)
+        private static void PrintChessboard(Board board, Position? position = null)
         {
             Console.Clear();
             Console.WriteLine();
@@ -45,7 +45,7 @@ namespace Chess
         }
 
 
-        public static void PrintPiece(Piece piece)
+        private static void PrintPiece(Piece piece)
         {
             if (piece is null)
             {
@@ -69,32 +69,40 @@ namespace Chess
         }
 
 
-        public static void ShowPlayInfo(ChessGame match, string message)
+        private static void ShowPlayInfo(ChessGame match, string message)
         {
-            if (match.CapturedPieces(Color.White).Count > 0)
+            if (!match.Finished)
             {
-                Console.WriteLine();
-                Console.Write(" White losses:");
-                PrintCapturedPieces(match.CapturedPieces(Color.White));
+                if (match.CapturedPieces(Color.White).Count > 0)
+                {
+                    Console.WriteLine();
+                    Console.Write(" White losses:");
+                    PrintCapturedPieces(match.CapturedPieces(Color.White));
+                }
+                if (match.CapturedPieces(Color.Black).Count > 0)
+                {
+                    Console.WriteLine();
+                    Console.Write(" Black losses:");
+                    PrintCapturedPieces(match.CapturedPieces(Color.Black), true);
+                }
+                Console.WriteLine("\n");
+                Console.WriteLine($" Round {match.Round}: {match.CurrentPlayer}'s turn.");
+                if (match.InCheck)
+                {
+                    Console.WriteLine(" You're in check!");
+                }
+                Console.Write(" " + message);
             }
-            if (match.CapturedPieces(Color.Black).Count > 0)
+            else
             {
-                Console.WriteLine();
-                Console.Write(" Black losses:");
-                PrintCapturedPieces(match.CapturedPieces(Color.Black), true);
+                Console.WriteLine($"\n Checkmate! {match.CurrentPlayer} won!");
+                Console.WriteLine($"\n\t    {message}");
             }
-            Console.WriteLine();
-            Console.WriteLine();
-            Console.WriteLine($" Round {match.Round}: {match.CurrentPlayer}'s turn.");
-            if (match.InCheck)
-            {
-                Console.WriteLine(" You're in check!");
-            }
-            Console.Write(" " + message);
+
         }
 
 
-        public static void PrintCapturedPieces(IEnumerable<Piece> capturedPieces, bool isBlack = false)
+        private static void PrintCapturedPieces(IEnumerable<Piece> capturedPieces, bool isBlack = false)
         {
             Console.Write(" [");
             ConsoleColor aux = Console.ForegroundColor;
