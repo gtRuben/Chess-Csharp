@@ -44,7 +44,7 @@ namespace game
         }
 
 
-        public void NewPiece(Piece piece, ChessPosition chessPosition)
+        private void NewPiece(Piece piece, ChessPosition chessPosition)
         {
             Board.PutPiece(piece, chessPosition.ToPosition());
             _pieces.Add(piece);
@@ -55,12 +55,19 @@ namespace game
         {
             TryMove(origin, target);
             InCheck = Check(Opponent(CurrentPlayer));
-            Round++;
-            ChangePlayer();
+            if (InCheck)
+            {
+                Finished = Checkmate(origin, target);
+            }
+            if (!Finished)
+            {
+                Round++;
+                ChangePlayer();
+            }
         }
 
 
-        public void TryMove(Position origin, Position target)
+        private void TryMove(Position origin, Position target)
         {
             Piece piece = MovePiece(origin, target);
             if (Check(CurrentPlayer))
@@ -85,7 +92,7 @@ namespace game
         }
 
 
-        public bool Check(Color color)
+        private bool Check(Color color)
         {
             var pieces = PiecesOnTheBoard(Opponent(color));
             Position king = Board.GetKingsPosition(color);
@@ -100,7 +107,7 @@ namespace game
         }
 
 
-        public Color Opponent(Color color)
+        private Color Opponent(Color color)
         {
             if (color == Color.White)
             {
@@ -113,7 +120,7 @@ namespace game
         }
 
 
-        public HashSet<Piece> PiecesOnTheBoard(Color color)
+        private HashSet<Piece> PiecesOnTheBoard(Color color)
         {
             var pieces = new HashSet<Piece>(_pieces.Where(p => p.Color == color));
             pieces.ExceptWith(CapturedPieces(color));
@@ -131,6 +138,39 @@ namespace game
                 Board.PutPiece(capturedPiece, target);
                 _capturedPieces.Remove(capturedPiece);
             }
+        }
+
+
+        private bool Checkmate(Position origin, Position target)
+        {
+            Color opponent = Opponent(CurrentPlayer);
+            var pieces = PiecesOnTheBoard(opponent);
+            foreach (var piece in pieces)
+            {
+                var possibleMoves = piece.PossibleMoves();
+                for (int i = 0; i < Board.Rows; i++)
+                {
+                    for (int j = 0; j < Board.Columns; j++)
+                    {
+                        if (possibleMoves[i, j])
+                        {
+                            Position _origin = piece.Position;
+                            Position _target = new Position(i, j);
+                            Piece captured = MovePiece(_origin, _target);
+                            if (Check(opponent))
+                            {
+                                UndoMove(_target, _origin, captured);
+                            }
+                            else
+                            {
+                                UndoMove(_target, _origin, captured);
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }
+            return true;
         }
 
 
