@@ -28,18 +28,18 @@ namespace game
         {
             // White
             NewPiece(new Tower(Board, Color.White), new ChessPosition('c', 1));
-            NewPiece(new Tower(Board, Color.White), new ChessPosition('c', 2));
-            NewPiece(new Tower(Board, Color.White), new ChessPosition('d', 2));
+            NewPiece(new Pawn(Board, Color.White), new ChessPosition('c', 2));
+            NewPiece(new Pawn(Board, Color.White), new ChessPosition('d', 2));
             NewPiece(new Tower(Board, Color.White), new ChessPosition('e', 1));
-            NewPiece(new Tower(Board, Color.White), new ChessPosition('e', 2));
+            NewPiece(new Pawn(Board, Color.White), new ChessPosition('e', 2));
             NewPiece(new King(Board, Color.White), new ChessPosition('d', 1));
 
             // Black
-            NewPiece(new Tower(Board, Color.Black), new ChessPosition('c', 7));
+            NewPiece(new Pawn(Board, Color.Black), new ChessPosition('c', 7));
             NewPiece(new Tower(Board, Color.Black), new ChessPosition('c', 8));
-            NewPiece(new Tower(Board, Color.Black), new ChessPosition('d', 7));
+            NewPiece(new Pawn(Board, Color.Black), new ChessPosition('d', 7));
             NewPiece(new Tower(Board, Color.Black), new ChessPosition('e', 8));
-            NewPiece(new Tower(Board, Color.Black), new ChessPosition('e', 7));
+            NewPiece(new Pawn(Board, Color.Black), new ChessPosition('e', 7));
             NewPiece(new King(Board, Color.Black), new ChessPosition('d', 8));
         }
 
@@ -94,7 +94,7 @@ namespace game
 
         private bool Check(Color color)
         {
-            var pieces = PiecesOnTheBoard(Opponent(color));
+            HashSet<Piece> pieces = PiecesOnTheBoard(Opponent(color));
             Position king = Board.GetKingsPosition(color);
             foreach (Piece piece in pieces)
             {

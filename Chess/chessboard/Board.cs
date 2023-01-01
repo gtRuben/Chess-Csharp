@@ -46,7 +46,7 @@ namespace chessboard
         {
             if (TheresAPiece(position))
             {
-                throw new BoardException("There's already a piece in that position!");
+                throw new BoardException(" There's already a piece in that position!");
             }
             piece.Position = position;
             _pieces[position.Row, position.Column] = piece;
@@ -55,17 +55,11 @@ namespace chessboard
 
         public bool TheresAPiece(Position position)
         {
-            ValidatePosition(position);
-            return Piece(position) is not null;
-        }
-
-
-        public void ValidatePosition(Position position)
-        {
             if (!ValidPosition(position))
             {
-                throw new BoardException("Invalid position!");
+                throw new BoardException(" Invalid position!");
             }
+            return Piece(position) is not null;
         }
 
 
