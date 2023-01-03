@@ -49,18 +49,18 @@ namespace game
                     if (!Board.TheresAPiece(aux))
                         possibleMoves[aux.Row, aux.Column] = true;
                 }
-                // above
+                // below
                 aux.SetPosition(Position.Row + 1, Position.Column);
                 if (Board.ValidPosition(aux) && !Board.TheresAPiece(aux))
                     possibleMoves[aux.Row, aux.Column] = true;
 
-                // north east
+                // northwest
                 aux.SetPosition(Position.Row + 1, Position.Column - 1);
                 if (Board.ValidPosition(aux) && Board.TheresAPiece(aux))
                     if (Board.Piece(aux).Color != Color)
                         possibleMoves[aux.Row, aux.Column] = true;
 
-                // northwest
+                // southeast
                 aux.SetPosition(Position.Row + 1, Position.Column + 1);
                 if (Board.ValidPosition(aux) && Board.TheresAPiece(aux))
                     if (Board.Piece(aux).Color != Color)
@@ -69,6 +69,7 @@ namespace game
 
             return possibleMoves;
         }
+
 
         public override string? ToString()
         {

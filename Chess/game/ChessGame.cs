@@ -27,19 +27,19 @@ namespace game
         private void PlacePieces()
         {
             // White
-            NewPiece(new Tower(Board, Color.White), new ChessPosition('c', 1));
-            NewPiece(new Pawn(Board, Color.White), new ChessPosition('c', 2));
-            NewPiece(new Pawn(Board, Color.White), new ChessPosition('d', 2));
-            NewPiece(new Tower(Board, Color.White), new ChessPosition('e', 1));
-            NewPiece(new Pawn(Board, Color.White), new ChessPosition('e', 2));
+            NewPiece(new Bishop(Board, Color.White), new ChessPosition('c', 1));
+            NewPiece(new Knight(Board, Color.White), new ChessPosition('c', 2));
+            NewPiece(new Knight(Board, Color.White), new ChessPosition('d', 2));
+            NewPiece(new Bishop(Board, Color.White), new ChessPosition('e', 1));
+            NewPiece(new Queen(Board, Color.White), new ChessPosition('e', 2));
             NewPiece(new King(Board, Color.White), new ChessPosition('d', 1));
 
             // Black
-            NewPiece(new Pawn(Board, Color.Black), new ChessPosition('c', 7));
-            NewPiece(new Tower(Board, Color.Black), new ChessPosition('c', 8));
-            NewPiece(new Pawn(Board, Color.Black), new ChessPosition('d', 7));
-            NewPiece(new Tower(Board, Color.Black), new ChessPosition('e', 8));
-            NewPiece(new Pawn(Board, Color.Black), new ChessPosition('e', 7));
+            NewPiece(new Knight(Board, Color.Black), new ChessPosition('c', 7));
+            NewPiece(new Bishop(Board, Color.Black), new ChessPosition('c', 8));
+            NewPiece(new Knight(Board, Color.Black), new ChessPosition('d', 7));
+            NewPiece(new Bishop(Board, Color.Black), new ChessPosition('e', 8));
+            NewPiece(new Queen(Board, Color.Black), new ChessPosition('e', 7));
             NewPiece(new King(Board, Color.Black), new ChessPosition('d', 8));
         }
 
@@ -57,7 +57,7 @@ namespace game
             InCheck = Check(Opponent(CurrentPlayer));
             if (InCheck)
             {
-                Finished = Checkmate(origin, target);
+                Finished = Checkmate();
             }
             if (!Finished)
             {
@@ -141,7 +141,7 @@ namespace game
         }
 
 
-        private bool Checkmate(Position origin, Position target)
+        private bool Checkmate()
         {
             Color opponent = Opponent(CurrentPlayer);
             var pieces = PiecesOnTheBoard(opponent);
